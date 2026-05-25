@@ -1,16 +1,17 @@
 {
-  "short_name": "MonBoard",
-  "name": "MonBoard - Mon Pinterest Privé",
+  "short_name": "HimeKura",
+  "name": "HimeKura - Mon Board d'Inspiration",
   "icons": [
     {
       "src": "https://cdn-icons-png.flaticon.com/512/3659/3659899.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ],
   "start_url": "./index.html",
-  "background_color": "#0A0A1A",
-  "theme_color": "#C8FF00",
+  "background_color": "#120A0C",
+  "theme_color": "#FF6B8B",
   "display": "standalone",
   "orientation": "portrait-primary"
 }
