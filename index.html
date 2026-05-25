@@ -147,7 +147,7 @@
   }
   .tag-btn:hover, .tag-btn:active { border-color: rgba(255, 245, 246, 0.4); color: var(--cream); }
   .tag-btn.active { background: var(--sakura-neon); border-color: var(--sakura-neon); color: var(--sakura-dark); }
-  
+   
   .add-tag-filter-btn {
     background: rgba(255, 107, 139, 0.1); border: 1px dashed rgba(255, 107, 139, 0.4);
     color: var(--sakura-soft); font-weight: 800; padding: 0.35rem 0.65rem; font-size: 0.7rem; cursor: pointer; flex-shrink: 0;
@@ -229,37 +229,55 @@
   .empty-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem; margin-bottom: 0.4rem; }
   .empty-sub { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; }
 
+  /* ── CONFIGURATION DE LA GALERIE ── */
   #gallery {
     padding: 0 1.5rem;
     column-count: 3;
-    column-gap: 10px;
+    column-gap: 20px; /* Plus d'espace pour laisser respirer les cadres */
   }
   #gallery.cols-1 { column-count: 1; }
   #gallery.cols-2 { column-count: 2; }
   #gallery.cols-3 { column-count: 3; }
   #gallery.cols-4 { column-count: 4; }
 
+  /* ── LE CADRE PHOTO CYBERPUNK ── */
   .photo-card {
     break-inside: avoid;
-    margin-bottom: 10px;
-    position: relative; overflow: hidden;
+    margin-bottom: 20px; /* Bel espace régulier vertical */
+    position: relative; 
+    overflow: hidden;
     cursor: pointer;
     animation: cardIn 0.4s ease both;
-    background: var(--sakura-card);
-    border: 1px solid rgba(255, 107, 139, 0.05);
-    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    background: #120A0C; /* Fond noir jais pur */
+    border: 1.5px solid rgba(255, 107, 139, 0.2); /* Cadre rose subtil au repos */
+    border-radius: 12px; /* Bords arrondis pour le style moderne */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     -webkit-tap-highlight-color: transparent;
   }
   @keyframes cardIn {
     from { opacity: 0; transform: scale(0.95) translateY(8px); }
     to { opacity: 1; transform: none; }
   }
-  .photo-card img { width: 100%; display: block; transition: transform 0.5s ease; }
-  .photo-card:hover img { transform: scale(1.04); }
+  .photo-card img { 
+    width: 100%; 
+    display: block; 
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); 
+  }
+  
+  /* ── HOVER ANIMATION ET EFFET NÉON ── */
+  .photo-card:hover { 
+    border-color: var(--sakura-neon); /* Le cadre s'illumine au survol */
+    box-shadow: 0 0 20px rgba(255, 107, 139, 0.45); /* Halo néon rose */
+    transform: translateY(-5px); /* Légère élévation */
+  }
+  .photo-card:hover img { transform: scale(1.03); }
 
+  /* ── OVERLAY DES ACTIONS NETTOYÉ ── */
   .photo-overlay {
     position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(18, 10, 12, 0.95) 0%, transparent 60%);
+    background: linear-gradient(to top, rgba(18, 10, 12, 0.85) 0%, transparent 40%);
     display: flex; flex-direction: column;
     justify-content: flex-end; padding: 0.85rem;
     opacity: 0; transition: opacity 0.3s;
@@ -267,12 +285,11 @@
   .photo-card:hover .photo-overlay { opacity: 1; }
   @media (pointer: coarse) { .photo-overlay { opacity: 1; } }
 
+  /* MASQUAGE COMPLET DU NOM DE FICHIER SUR LA GRILLE */
   .photo-name {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem; letter-spacing: 0.08em;
-    color: rgba(255, 245, 246, 0.8);
-    margin-bottom: 0.4rem; word-break: break-all;
+    display: none !important; 
   }
+  
   .photo-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 0.5rem; }
   .photo-tag {
     font-size: 0.55rem; font-weight: 800;
@@ -572,6 +589,7 @@ function renderFilters() {
   });
 }
 
+// Modification mineure ici : pour la cohérence, l'information textuelle complète (comme le nom original) reste stockée et visible uniquement dans le titre de la Lightbox ouverte.
 function fp() {
   return photos.filter(p => {
     const tOk = currentFilter === 'all' || p.tags.includes(currentFilter);
