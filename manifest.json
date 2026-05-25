@@ -3,8 +3,8 @@
   "name": "HimeKura - Mon Board d'Inspiration",
   "icons": [
     {
-      "src": "https://img.shields.io/badge/%E5%A7%AB-FF6B8B?style=for-the-badge&logoColor=120A0C&labelColor=120A0C",
-      "type": "image/svg+xml",
+      "src": "./icon.png",
+      "type": "image/png",
       "sizes": "512x512",
       "purpose": "any maskable"
     }
