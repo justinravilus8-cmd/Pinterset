@@ -3,24 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>SakuraBoard</title>
+<title>HimeKura</title>
 
-<!-- Configuration PWA -->
 <link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23120A0C%22/><text y=%2275%22 x=%227%22 font-family=%22sans-serif%22 font-size=%2275%22 font-weight=%22bold%22 fill=%22%23FF6B8B%22>姫</text></svg>">
 <meta name="theme-color" content="#FF6B8B">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="SakuraBoard">
+<meta name="apple-mobile-web-app-title" content="HimeKura">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="description" content="Moodboard visuel personnel - Thème Sakura">
+<meta name="description" content="Moodboard visuel personnel - Thème HimeKura">
 
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;700;800&family=DM+Mono:ital@0;1&display=swap" rel="stylesheet">
 <style>
   :root {
     --sakura-neon: #FF6B8B;  /* Rose néon vif (Fleur de cerisier) */
     --sakura-soft: #FFB7C5;  /* Rose pastel doux */
-    --sakura-dark: #120A0C;  /* Noir de jais avec une pointe de lie-de-vin (Fond principal) */
-    --sakura-card: #1C1215;  /* Noir légèrement plus clair pour les cartes */
+    --sakura-dark: #120A0C;  /* Noir de jais avec une pointe de lie-de-vin */
+    --sakura-card: rgba(28, 18, 21, 0.6);  /* Cartes en glassmorphism */
     --cream: #FFF5F6;        /* Blanc cassé rosé pour le texte */
     --coral: #FF4D2E;
     --safe-top: env(safe-area-inset-top, 0px);
@@ -66,8 +66,7 @@
     display: flex; align-items: center; justify-content: space-between;
     padding: 1rem 1.5rem;
     background: rgba(18, 10, 12, 0.92);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
     border-bottom: 1px solid rgba(255, 107, 139, 0.15);
   }
   .logo {
@@ -79,12 +78,22 @@
   .logo span { color: var(--sakura-neon); }
   .logo .kanji {
     font-family: 'Syne', sans-serif;
-    font-size: 0.9rem; font-weight: 400;
+    font-size: 0.9rem; font-weight: 700;
     background: rgba(255, 107, 139, 0.15);
     color: var(--sakura-soft);
     padding: 0.1rem 0.4rem;
     letter-spacing: 0;
+    transition: transform 0.2s;
   }
+  .logo:hover .kanji { animation: glitch 0.3s linear infinite; }
+  
+  @keyframes glitch {
+    0% { transform: translate(0) skew(0deg); text-shadow: 2px 0 var(--coral); }
+    30% { transform: translate(-2px, 1px) skew(-3deg); }
+    70% { transform: translate(2px, -1px) skew(3deg); text-shadow: -2px 0 var(--sakura-neon); }
+    100% { transform: translate(0) skew(0deg); }
+  }
+
   .nav-right { display: flex; align-items: center; gap: 1rem; }
   .nav-count {
     font-family: 'DM Mono', monospace;
@@ -113,8 +122,7 @@
     display: flex; align-items: center; gap: 0.5rem;
     padding: 0.75rem 1.5rem;
     background: rgba(18, 10, 12, 0.8);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     border-bottom: 1px solid rgba(255, 245, 246, 0.05);
     overflow-x: auto; -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
@@ -126,6 +134,7 @@
     text-transform: uppercase; color: rgba(255, 245, 246, 0.3);
     white-space: nowrap; flex-shrink: 0;
   }
+  #tag-filters-container { display: flex; gap: 0.5rem; align-items: center; }
   .tag-btn {
     font-family: 'Syne', sans-serif;
     font-size: 0.7rem; font-weight: 800;
@@ -138,6 +147,12 @@
   }
   .tag-btn:hover, .tag-btn:active { border-color: rgba(255, 245, 246, 0.4); color: var(--cream); }
   .tag-btn.active { background: var(--sakura-neon); border-color: var(--sakura-neon); color: var(--sakura-dark); }
+  
+  .add-tag-filter-btn {
+    background: rgba(255, 107, 139, 0.1); border: 1px dashed rgba(255, 107, 139, 0.4);
+    color: var(--sakura-soft); font-weight: 800; padding: 0.35rem 0.65rem; font-size: 0.7rem; cursor: pointer; flex-shrink: 0;
+  }
+
   .toolbar-sep { width: 1px; height: 16px; background: rgba(255, 245, 246, 0.1); flex-shrink: 0; }
   .view-btn {
     background: transparent; border: 1px solid rgba(255, 245, 246, 0.12);
@@ -154,10 +169,10 @@
     color: var(--cream); font-family: 'DM Mono', monospace;
     font-size: 0.73rem; letter-spacing: 0.07em;
     padding: 0.35rem 0.9rem; outline: none;
-    width: 140px; transition: border-color 0.2s, width 0.3s;
+    width: 130px; transition: border-color 0.2s, width 0.3s;
   }
   #search-input::placeholder { color: rgba(255, 245, 246, 0.2); }
-  #search-input:focus { border-color: var(--sakura-neon); width: 200px; }
+  #search-input:focus { border-color: var(--sakura-neon); width: 180px; }
 
   main { padding-top: 130px; padding-bottom: 5rem; min-height: 100vh; }
 
@@ -204,8 +219,6 @@
     transition: background 0.2s, transform 0.2s;
     -webkit-tap-highlight-color: transparent;
   }
-  .upload-btn:hover { background: var(--sakura-soft); }
-  .upload-btn:active { transform: scale(0.97); }
 
   #empty-state {
     display: none;
@@ -218,16 +231,13 @@
 
   #gallery {
     padding: 0 1.5rem;
-    column-count: 2;
+    column-count: 3;
     column-gap: 10px;
   }
-  @media (min-width: 600px) { #gallery { column-count: 3; } }
-  @media (min-width: 900px) { #gallery { column-count: 4; } }
   #gallery.cols-1 { column-count: 1; }
   #gallery.cols-2 { column-count: 2; }
   #gallery.cols-3 { column-count: 3; }
   #gallery.cols-4 { column-count: 4; }
-  #gallery.cols-5 { column-count: 5; }
 
   .photo-card {
     break-inside: avoid;
@@ -237,6 +247,7 @@
     animation: cardIn 0.4s ease both;
     background: var(--sakura-card);
     border: 1px solid rgba(255, 107, 139, 0.05);
+    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
     -webkit-tap-highlight-color: transparent;
   }
   @keyframes cardIn {
@@ -266,7 +277,7 @@
   .photo-tag {
     font-size: 0.55rem; font-weight: 800;
     letter-spacing: 0.09em; text-transform: uppercase;
-    padding: 2px 7px;
+    padding: 2px 7px; background: rgba(255, 245, 246, 0.1); color: var(--cream);
   }
   .photo-actions { display: flex; gap: 6px; }
   .action-btn {
@@ -288,8 +299,7 @@
     display: flex; align-items: center; justify-content: center;
     opacity: 0; pointer-events: none;
     transition: opacity 0.3s;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
   }
   #lightbox.open { opacity: 1; pointer-events: all; }
   #lb-img {
@@ -315,80 +325,55 @@
     color: rgba(255, 245, 246, 0.35); text-transform: uppercase;
     white-space: nowrap; text-align: center;
   }
-  #lb-nav {
-    position: fixed; top: 50%; left: 0; right: 0;
-    display: flex; justify-content: space-between;
-    padding: 0 1rem; pointer-events: none;
-  }
+  #lb-nav { position: fixed; top: 50%; left: 0; right: 0; display: flex; justify-content: space-between; padding: 0 1rem; pointer-events: none; }
   .lb-arrow {
-    pointer-events: all;
-    background: rgba(18, 10, 12, 0.65);
-    border: 1px solid rgba(255, 107, 139, 0.15);
-    color: var(--sakura-neon);
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.2rem; padding: 0.5rem 1rem;
-    cursor: pointer; transition: background 0.2s;
-    transform: translateY(-50%);
-    -webkit-tap-highlight-color: transparent;
+    pointer-events: all; background: rgba(18, 10, 12, 0.65); border: 1px solid rgba(255, 107, 139, 0.15);
+    color: var(--sakura-neon); font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; padding: 0.5rem 1rem;
+    cursor: pointer; transform: translateY(-50%); -webkit-tap-highlight-color: transparent;
   }
-  .lb-arrow:active { background: rgba(255, 107, 139, 0.12); }
 
-  #tag-modal {
+  /* Modals */
+  .modal {
     position: fixed; inset: 0; z-index: 600;
     background: rgba(18, 10, 12, 0.93);
-    display: flex; align-items: flex-end; justify-content: center;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.25s;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   }
-  @media (min-width: 600px) { #tag-modal { align-items: center; } }
-  #tag-modal.open { opacity: 1; pointer-events: all; }
+  .modal.open { opacity: 1; pointer-events: all; }
   .modal-box {
-    background: #180F11;
-    border: 1px solid rgba(255, 107, 139, 0.18);
-    border-bottom: none;
-    padding: 1.75rem 1.5rem calc(1.75rem + env(safe-area-inset-bottom, 0px));
-    width: 100%; max-width: 400px;
-    border-radius: 0;
-    animation: slideUp 0.3s ease both;
+    background: #180F11; border: 1px solid rgba(255, 107, 139, 0.18);
+    padding: 1.75rem 1.5rem; width: 90%; max-width: 400px;
   }
-  @media (min-width: 600px) {
-    .modal-box { border-bottom: 1px solid rgba(255, 107, 139, 0.18); padding-bottom: 1.75rem; }
-  }
-  @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
   .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.06em; margin-bottom: 0.4rem; color: var(--sakura-neon); }
   .modal-sub { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 245, 246, 0.32); margin-bottom: 1.1rem; }
+  .modal-input {
+    width: 100%; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,245,246,0.1);
+    color: white; padding: 0.6rem; font-family: 'DM Mono', monospace; font-size: 0.8rem; outline: none; margin-bottom: 1.2rem;
+  }
+  .modal-input:focus { border-color: var(--sakura-neon); }
   .tag-options { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.4rem; }
   .tag-opt {
     font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
-    padding: 0.4rem 0.9rem;
-    border: 1px solid rgba(255, 245, 246, 0.12);
+    padding: 0.4rem 0.9rem; border: 1px solid rgba(255, 245, 246, 0.12);
     background: transparent; color: rgba(255, 245, 246, 0.42);
-    cursor: pointer; transition: all 0.2s;
-    -webkit-tap-highlight-color: transparent;
+    cursor: pointer; transition: all 0.2s; -webkit-tap-highlight-color: transparent;
   }
   .tag-opt.selected { background: var(--sakura-neon); border-color: var(--sakura-neon); color: var(--sakura-dark); }
   .modal-actions { display: flex; gap: 0.6rem; justify-content: flex-end; }
   .modal-btn {
-    font-family: 'Syne', sans-serif; font-size: 0.75rem; font-weight: 800;
-    letter-spacing: 0.1em; text-transform: uppercase;
+    font-family: 'Syne', sans-serif; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
     padding: 0.55rem 1.3rem; border: 1px solid; cursor: pointer; transition: all 0.2s;
-    -webkit-tap-highlight-color: transparent;
   }
   .modal-btn.cancel { border-color: rgba(255, 245, 246, 0.15); color: rgba(255, 245, 246, 0.4); background: transparent; }
   .modal-btn.confirm { border-color: var(--sakura-neon); color: var(--sakura-dark); background: var(--sakura-neon); }
-  .modal-btn.confirm:active { background: var(--sakura-soft); }
 
   #toast {
     position: fixed; bottom: calc(2rem + env(safe-area-inset-bottom, 0px)); left: 50%;
     transform: translateX(-50%) translateY(80px);
-    background: var(--sakura-neon); color: var(--sakura-dark);
-    font-family: 'DM Mono', monospace;
+    background: var(--sakura-neon); color: var(--sakura-dark); font-family: 'DM Mono', monospace;
     font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
-    padding: 0.65rem 1.4rem; z-index: 700;
-    opacity: 0; transition: transform 0.35s, opacity 0.35s;
-    pointer-events: none; white-space: nowrap;
+    padding: 0.65rem 1.4rem; z-index: 700; opacity: 0; transition: all 0.35s; pointer-events: none; white-space: nowrap;
   }
   #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
@@ -404,21 +389,11 @@
   @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
   #offline-banner {
-    display: none;
-    position: fixed; top: 68px; left: 0; right: 0; z-index: 150;
-    background: var(--coral); color: white;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
-    text-align: center; padding: 0.5rem;
+    display: none; position: fixed; top: 68px; left: 0; right: 0; z-index: 150;
+    background: var(--coral); color: white; font-family: 'DM Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; text-align: center; padding: 0.5rem;
   }
   #offline-banner.visible { display: block; }
-
-  /* Ajustement des couleurs des tags */
-  .tag-branding { background: rgba(255, 107, 139, 0.2); color: var(--sakura-soft); }
-  .tag-photo { background: rgba(255, 183, 197, 0.15); color: #FFA3B1; }
-  .tag-ui { background: rgba(255, 245, 246, 0.1); color: var(--cream); }
-  .tag-motion { background: rgba(255, 77, 46, 0.2); color: var(--coral); }
-  .tag-inspo { background: rgba(255, 107, 139, 0.3); color: var(--sakura-neon); }
 </style>
 </head>
 <body>
@@ -429,8 +404,7 @@
 <div id="offline-banner">✕ Mode hors-ligne — tes images restent disponibles</div>
 
 <nav>
-  <!-- Le logo stylisé Streetwear/Animé avec le kanji Sakura -->
-  <a href="#" class="logo">SAKURA<span>BOARD</span><div class="kanji">桜</div></a>
+  <a href="#" class="logo">HIME<span>KURA</span><div class="kanji">姫</div></a>
   <div class="nav-right">
     <button id="install-btn">+ Installer</button>
     <span class="nav-count" id="count-badge">0 images</span>
@@ -439,12 +413,8 @@
 
 <div id="toolbar">
   <span class="toolbar-label">Filtrer :</span>
-  <button class="tag-btn active" data-filter="all">Tout</button>
-  <button class="tag-btn" data-filter="branding">Branding</button>
-  <button class="tag-btn" data-filter="photo">Photo</button>
-  <button class="tag-btn" data-filter="ui">UI</button>
-  <button class="tag-btn" data-filter="motion">Motion</button>
-  <button class="tag-btn" data-filter="inspo">Inspo</button>
+  <div id="tag-filters-container"></div>
+  <button class="add-tag-filter-btn" id="btn-create-tag">+</button>
   <div class="toolbar-sep"></div>
   <button class="view-btn" data-cols="1">▌</button>
   <button class="view-btn" data-cols="2">▐</button>
@@ -457,7 +427,7 @@
   <div id="drop-zone" role="button" tabindex="0" aria-label="Zone d'upload d'images">
     <div class="drop-icon">🌸</div>
     <h2 class="drop-title">Glisse tes inspirations ici</h2>
-    <p class="drop-sub">jpeg · png · gif · webp</p>
+    <p class="drop-sub">Compression webp intelligente active</p>
     <label for="file-input" class="upload-btn">Choisir des fichiers</label>
     <input type="file" id="file-input" multiple accept="image/*">
     <p class="drop-hint">Tu peux aussi coller une image avec Ctrl+V</p>
@@ -479,20 +449,26 @@
   <div id="lb-info"></div>
 </div>
 
-<div id="tag-modal" role="dialog" aria-modal="true">
+<div class="modal" id="modal-add-tag">
+  <div class="modal-box">
+    <h3 class="modal-title">Créer une catégorie</h3>
+    <p class="modal-sub">Ajoute un nouveau tag sur ton board</p>
+    <input type="text" class="modal-input" id="input-new-tag-name" placeholder="Ex: sneakers, manga, cyber...">
+    <div class="modal-actions">
+      <button class="modal-btn cancel" id="btn-cancel-tag">Annuler</button>
+      <button class="modal-btn confirm" id="btn-confirm-tag">Créer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal-assign-tags">
   <div class="modal-box">
     <h3 class="modal-title">Tagger l'image</h3>
     <p class="modal-sub">Choisis une ou plusieurs catégories</p>
-    <div class="tag-options">
-      <button class="tag-opt" data-tag="branding">Branding</button>
-      <button class="tag-opt" data-tag="photo">Photo</button>
-      <button class="tag-opt" data-tag="ui">UI</button>
-      <button class="tag-opt" data-tag="motion">Motion</button>
-      <button class="tag-opt" data-tag="inspo">Inspo</button>
-    </div>
+    <div class="tag-options" id="assign-tags-list"></div>
     <div class="modal-actions">
-      <button class="modal-btn cancel" id="tag-cancel">Annuler</button>
-      <button class="modal-btn confirm" id="tag-confirm">Enregistrer</button>
+      <button class="modal-btn cancel" id="btn-cancel-assign">Annuler</button>
+      <button class="modal-btn confirm" id="btn-confirm-assign">Enregistrer</button>
     </div>
   </div>
 </div>
@@ -501,22 +477,21 @@
 
 <div class="marquee-wrap" aria-hidden="true">
   <div class="marquee-track">
-    <span>SakuraBoard</span><span class="marquee-sep">🌸</span>
-    <span>Inspiration</span><span class="marquee-sep">🌸</span>
-    <span>Créatif</span><span class="marquee-sep">🌸</span>
-    <span>Moodboard</span><span class="marquee-sep">🌸</span>
-    <span>Visuel</span><span class="marquee-sep">🌸</span>
-    <span>SakuraBoard</span><span class="marquee-sep">🌸</span>
-    <span>Inspiration</span><span class="marquee-sep">🌸</span>
-    <span>Créatif</span><span class="marquee-sep">🌸</span>
-    <span>Moodboard</span><span class="marquee-sep">🌸</span>
-    <span>Visuel</span><span class="marquee-sep">🌸</span>
+    <span>HimeKura Board</span><span class="marquee-sep">🌸</span>
+    <span>Inspiration Streetwear</span><span class="marquee-sep">🌸</span>
+    <span>Créatif Grid</span><span class="marquee-sep">🌸</span>
+    <span>Anime Vibes</span><span class="marquee-sep">🌸</span>
+    <span>HimeKura Board</span><span class="marquee-sep">🌸</span>
+    <span>Inspiration Streetwear</span><span class="marquee-sep">🌸</span>
+    <span>Créatif Grid</span><span class="marquee-sep">🌸</span>
+    <span>Anime Vibes</span><span class="marquee-sep">🌸</span>
   </div>
 </div>
 
 <script>
 // ── STATE ──────────────────────────────────────
 let photos = [];
+let customTags = ['branding', 'photo', 'ui', 'motion', 'inspo'];
 let currentFilter = 'all';
 let currentSearch = '';
 let lbIndex = 0;
@@ -524,44 +499,29 @@ let tagTargetId = null;
 let deferredInstall = null;
 
 try { photos = JSON.parse(localStorage.getItem('monboard_v2') || '[]'); } catch(e) { photos = []; }
+try { customTags = JSON.parse(localStorage.getItem('hk_custom_tags') || '["branding", "photo", "ui", "motion", "inspo"]'); } catch(e) {}
 
 // ── SERVICE WORKER ─────────────────────────────
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
-  });
+  window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(() => {}); });
 }
 
 // ── INSTALL PROMPT ─────────────────────────────
 window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredInstall = e;
+  e.preventDefault(); deferredInstall = e;
   document.getElementById('install-btn').classList.add('visible');
 });
 document.getElementById('install-btn').addEventListener('click', () => {
-  if (!deferredInstall) return;
-  deferredInstall.prompt();
-  deferredInstall.userChoice.then(() => {
-    deferredInstall = null;
-    document.getElementById('install-btn').classList.remove('visible');
-  });
-});
-window.addEventListener('appinstalled', () => {
-  document.getElementById('install-btn').classList.remove('visible');
-  toast('App installée 🌸');
+  if (!deferredInstall) return; deferredInstall.prompt();
+  deferredInstall.userChoice.then(() => { deferredInstall = null; document.getElementById('install-btn').classList.remove('visible'); });
 });
 
 // ── OFFLINE ────────────────────────────────────
-function updateOnlineStatus() {
-  document.getElementById('offline-banner').classList.toggle('visible', !navigator.onLine);
-}
-window.addEventListener('online', updateOnlineStatus);
-window.addEventListener('offline', updateOnlineStatus);
-updateOnlineStatus();
+function updateOnlineStatus() { document.getElementById('offline-banner').classList.toggle('visible', !navigator.onLine); }
+window.addEventListener('online', updateOnlineStatus); window.addEventListener('offline', updateOnlineStatus); updateOnlineStatus();
 
 // ── CURSOR ─────────────────────────────────────
-const cursor = document.getElementById('cursor');
-const ring = document.getElementById('cursor-ring');
+const cursor = document.getElementById('cursor'); const ring = document.getElementById('cursor-ring');
 if (window.matchMedia('(pointer: fine)').matches) {
   let mx = 0, my = 0, rx = 0, ry = 0;
   document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
@@ -571,28 +531,47 @@ if (window.matchMedia('(pointer: fine)').matches) {
     ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
     requestAnimationFrame(tick);
   })();
-  function cursorBig() { ring.style.transform = 'translate(-50%,-50%) scale(1.8)'; cursor.style.transform = 'translate(-50%,-50%) scale(0.5)'; }
-  function cursorNorm() { ring.style.transform = 'translate(-50%,-50%) scale(1)'; cursor.style.transform = 'translate(-50%,-50%) scale(1)'; }
-  document.querySelectorAll('a,button,label').forEach(el => {
-    el.addEventListener('mouseenter', cursorBig);
-    el.addEventListener('mouseleave', cursorNorm);
-  });
 }
 
 // ── SAVE & TOAST ───────────────────────────────
 function save() {
-  try { localStorage.setItem('monboard_v2', JSON.stringify(photos)); } catch(e) {
-    toast('Stockage plein — supprime des images');
-  }
+  try { localStorage.setItem('monboard_v2', JSON.stringify(photos)); } catch(e) { toast('Stockage plein — supprime des images'); }
 }
 function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.classList.remove('show'), 2400);
+  const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._timer); t._timer = setTimeout(() => t.classList.remove('show'), 2400);
 }
 
-// ── FILTERED LIST ──────────────────────────────
+// ── COMPRESSION WEBP INTELLIGENTE ──────────────
+async function compressImage(file) {
+  return new Promise((resolve) => {
+    const reader = new FileReader(); reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image(); img.src = event.target.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width; let height = img.height;
+        if (width > 1200) { height = Math.round((height * 1200) / width); width = 1200; }
+        canvas.width = width; canvas.height = height;
+        const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/webp', 0.75));
+      };
+    };
+  });
+}
+
+// ── FILTRES & RENDU SYSTEM ───────────────────
+function renderFilters() {
+  const container = document.getElementById('tag-filters-container');
+  container.innerHTML = `<button class="tag-btn ${currentFilter==='all'?'active':''}" data-filter="all">Tout</button>`;
+  customTags.forEach(t => {
+    container.innerHTML += `<button class="tag-btn ${currentFilter===t?'active':''}" data-filter="${t}">${t}</button>`;
+  });
+  document.querySelectorAll('#tag-filters-container .tag-btn').forEach(btn => {
+    btn.addEventListener('click', () => { currentFilter = btn.dataset.filter; renderFilters(); render(); });
+  });
+}
+
 function fp() {
   return photos.filter(p => {
     const tOk = currentFilter === 'all' || p.tags.includes(currentFilter);
@@ -601,18 +580,13 @@ function fp() {
   });
 }
 
-// ── RENDER ─────────────────────────────────────
 function render() {
   const gallery = document.getElementById('gallery');
   const empty = document.getElementById('empty-state');
   const list = fp();
 
-  document.getElementById('count-badge').textContent =
-    photos.length + ' image' + (photos.length !== 1 ? 's' : '');
-
-  if (photos.length === 0) {
-    empty.classList.add('visible'); gallery.innerHTML = ''; return;
-  }
+  document.getElementById('count-badge').textContent = photos.length + ' image' + (photos.length !== 1 ? 's' : '');
+  if (photos.length === 0) { empty.classList.add('visible'); gallery.innerHTML = ''; return; }
   empty.classList.remove('visible');
 
   if (list.length === 0) {
@@ -622,11 +596,8 @@ function render() {
 
   gallery.innerHTML = '';
   list.forEach((photo, i) => {
-    const card = document.createElement('div');
-    card.className = 'photo-card';
-    card.style.animationDelay = (i % 20 * 0.03) + 's';
-
-    const tagsHTML = photo.tags.map(t => `<span class="photo-tag tag-${t}">${t}</span>`).join('');
+    const card = document.createElement('div'); card.className = 'photo-card';
+    const tagsHTML = photo.tags.map(t => `<span class="photo-tag">${t}</span>`).join('');
 
     card.innerHTML = `
       <img src="${photo.src}" alt="${photo.name}" loading="lazy">
@@ -634,178 +605,104 @@ function render() {
         <div class="photo-name">${photo.name}</div>
         <div class="photo-tags">${tagsHTML}</div>
         <div class="photo-actions">
-          <button class="action-btn tag-action" onclick="openTagModal(event, '${photo.id}')">Tagger</button>
+          <button class="action-btn tag-action" onclick="openAssignModal(event, '${photo.id}')">Tags</button>
           <button class="action-btn del-action" onclick="deletePhoto(event, '${photo.id}')">Supprimer</button>
         </div>
       </div>
     `;
-
-    card.addEventListener('click', (e) => {
-      if (!e.target.classList.contains('action-btn')) {
-        openLightbox(photo.id);
-      }
-    });
-
+    card.addEventListener('click', (e) => { if (!e.target.classList.contains('action-btn')) openLightbox(photo.id); });
     gallery.appendChild(card);
   });
-
-  if (window.matchMedia('(pointer: fine)').matches) {
-    document.querySelectorAll('.action-btn, .photo-card').forEach(el => {
-      el.addEventListener('mouseenter', () => {
-        ring.style.transform = 'translate(-50%,-50%) scale(1.8)';
-        cursor.style.transform = 'translate(-50%,-50%) scale(0.5)';
-      });
-      el.addEventListener('mouseleave', () => {
-        ring.style.transform = 'translate(-50%,-50%) scale(1)';
-        cursor.style.transform = 'translate(-50%,-50%) scale(1)';
-      });
-    });
-  }
 }
 
-// ── UPLOAD ACTIONS ─────────────────────────────
-function handleFiles(files) {
-  Array.from(files).forEach(file => {
-    if (!file.type.startsWith('image/')) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      photos.unshift({
-        id: 'img_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-        name: file.name,
-        src: e.target.result,
-        tags: []
-      });
-      save();
-      render();
-    };
-    reader.readAsDataURL(file);
-  });
+// ── UPLOAD & SYNC ─────────────────────────────
+async function handleFiles(files) {
+  toast('Compression en cours...');
+  for (let file of Array.from(files)) {
+    if (!file.type.startsWith('image/')) continue;
+    const webpSrc = await compressImage(file);
+    photos.unshift({
+      id: 'img_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+      name: file.name.split('.')[0],
+      src: webpSrc,
+      tags: currentFilter !== 'all' ? [currentFilter] : []
+    });
+  }
+  save(); render(); toast('Inspirations ajoutées ! 🌸');
 }
 
 const dz = document.getElementById('drop-zone');
 dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
 dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
 dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
-
 document.getElementById('file-input').addEventListener('change', e => handleFiles(e.target.files));
 
-document.addEventListener('paste', e => {
+document.addEventListener('paste', async e => {
   const items = (e.clipboardData || e.originalEvent.clipboardData).items;
   for (let item of items) {
     if (item.type.indexOf('image') === 0) {
-      const blob = item.getAsFile();
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        photos.unshift({
-          id: 'img_' + Date.now(),
-          name: 'Clipboard_' + new Date().toLocaleTimeString(),
-          src: event.target.result,
-          tags: ['inspo']
-        });
-        save();
-        render();
-        toast('Image collée ! 🌸');
-      };
-      reader.readAsDataURL(blob);
+      const blob = item.getAsFile(); const src = await compressImage(blob);
+      photos.unshift({ id: 'img_' + Date.now(), name: 'PressePapier_' + Date.now().toString().slice(-4), src: src, tags: currentFilter !== 'all' ? [currentFilter] : [] });
+      save(); render(); toast('Image collée ! 🌸');
     }
   }
 });
 
-window.deletePhoto = function(e, id) {
-  e.stopPropagation();
-  photos = photos.filter(p => p.id !== id);
-  save();
-  render();
-  toast('Image supprimée');
-};
+window.deletePhoto = function(e, id) { e.stopPropagation(); photos = photos.filter(p => p.id !== id); save(); render(); toast('Image supprimée'); };
 
-// ── TAG MODAL ──────────────────────────────────
-const modal = document.getElementById('tag-modal');
-window.openTagModal = function(e, id) {
-  e.stopPropagation();
-  tagTargetId = id;
-  const photo = photos.find(p => p.id === id);
-  document.querySelectorAll('.tag-opt').forEach(btn => {
-    btn.classList.toggle('selected', photo.tags.includes(btn.dataset.tag));
-  });
-  modal.classList.add('open');
-};
-
-document.querySelectorAll('.tag-opt').forEach(btn => {
-  btn.addEventListener('click', () => btn.classList.toggle('selected'));
+// ── MODAL AJOUT TAG GLOBAL ────────────────────
+const modalAddTag = document.getElementById('modal-add-tag');
+document.getElementById('btn-create-tag').addEventListener('click', () => modalAddTag.classList.add('open'));
+document.getElementById('btn-cancel-tag').addEventListener('click', () => modalAddTag.classList.remove('open'));
+document.getElementById('btn-confirm-tag').addEventListener('click', () => {
+  const val = document.getElementById('input-new-tag-name').value.trim().toLowerCase();
+  if(val && !customTags.includes(val)) {
+    customTags.push(val); localStorage.setItem('hk_custom_tags', JSON.stringify(customTags));
+    renderFilters(); modalAddTag.classList.remove('open');
+    document.getElementById('input-new-tag-name').value = ''; toast(`Tag "${val}" créé !`);
+  }
 });
 
-document.getElementById('tag-cancel').addEventListener('click', () => modal.classList.remove('open'));
-document.getElementById('tag-confirm').addEventListener('click', () => {
+// ── MODAL ASSIGNER TAGS A UNE IMAGE ───────────
+const modalAssign = document.getElementById('modal-assign-tags');
+window.openAssignModal = function(e, id) {
+  e.stopPropagation(); tagTargetId = id;
+  const photo = photos.find(p => p.id === id);
+  const container = document.getElementById('assign-tags-list'); container.innerHTML = '';
+  customTags.forEach(t => {
+    const isSel = photo.tags.includes(t);
+    container.innerHTML += `<button class="tag-opt ${isSel?'selected':''}" onclick="this.classList.toggle('selected')">${t}</button>`;
+  });
+  modalAssign.classList.add('open');
+};
+document.getElementById('btn-cancel-assign').addEventListener('click', () => modalAssign.classList.remove('open'));
+document.getElementById('btn-confirm-assign').addEventListener('click', () => {
   const photo = photos.find(p => p.id === tagTargetId);
-  if (photo) {
-    photo.tags = Array.from(document.querySelectorAll('.tag-opt.selected')).map(btn => btn.dataset.tag);
-    save();
-    render();
-    modal.classList.remove('open');
-    toast('Tags mis à jour 🌸');
+  if(photo) {
+    photo.tags = Array.from(document.querySelectorAll('#assign-tags-list .tag-opt.selected')).map(btn => btn.textContent.trim());
+    save(); render(); modalAssign.classList.remove('open'); toast('Tags mis à jour 🌸');
   }
 });
 
 // ── LIGHTBOX ───────────────────────────────────
-const lb = document.getElementById('lightbox');
-const lbImg = document.getElementById('lb-img');
-const lbInfo = document.getElementById('lb-info');
-
-function openLightbox(id) {
-  const list = fp();
-  lbIndex = list.findIndex(p => p.id === id);
-  if (lbIndex === -1) return;
-  updateLightbox();
-  lb.classList.add('open');
-}
-
-function updateLightbox() {
-  const list = fp();
-  if (list.length === 0 || lbIndex < 0 || lbIndex >= list.length) return;
-  const photo = list[lbIndex];
-  lbImg.src = photo.src;
-  lbInfo.textContent = `${lbIndex + 1} / ${list.length} — ${photo.name}`;
-}
-
+const lb = document.getElementById('lightbox'); const lbImg = document.getElementById('lb-img'); const lbInfo = document.getElementById('lb-info');
+function openLightbox(id) { const list = fp(); lbIndex = list.findIndex(p => p.id === id); if (lbIndex === -1) return; updateLightbox(); lb.classList.add('open'); }
+function updateLightbox() { const list = fp(); if (list.length === 0 || lbIndex < 0 || lbIndex >= list.length) return; const photo = list[lbIndex]; lbImg.src = photo.src; lbInfo.textContent = `${lbIndex + 1} / ${list.length} — ${photo.name}`; }
 document.getElementById('lb-close').addEventListener('click', () => lb.classList.remove('open'));
 document.getElementById('lb-prev').addEventListener('click', () => { lbIndex = (lbIndex - 1 + fp().length) % fp().length; updateLightbox(); });
 document.getElementById('lb-next').addEventListener('click', () => { lbIndex = (lbIndex + 1) % fp().length; updateLightbox(); });
 
-document.addEventListener('keydown', e => {
-  if (!lb.classList.contains('open')) return;
-  if (e.key === 'Escape') lb.classList.remove('open');
-  if (e.key === 'ArrowLeft') document.getElementById('lb-prev').click();
-  if (e.key === 'ArrowRight') document.getElementById('lb-next').click();
-});
-
 // ── TOOLBAR CONTROLS ───────────────────────────
-document.querySelectorAll('.tag-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentFilter = btn.dataset.filter;
-    render();
-  });
-});
-
 document.querySelectorAll('.view-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const cols = btn.dataset.cols;
-    const gallery = document.getElementById('gallery');
-    gallery.className = '';
-    gallery.classList.add(`cols-${cols}`);
+    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active');
+    const gallery = document.getElementById('gallery'); gallery.className = ''; gallery.classList.add(`cols-${btn.dataset.cols}`);
   });
 });
+document.getElementById('search-input').addEventListener('input', e => { currentSearch = e.target.value; render(); });
 
-document.getElementById('search-input').addEventListener('input', e => {
-  currentSearch = e.target.value;
-  render();
-});
-
-render();
+// RUN
+renderFilters(); render();
 </script>
 </body>
 </html>
