@@ -3,32 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>MonBoard</title>
+<title>SakuraBoard</title>
 
+<!-- Configuration PWA -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#C8FF00">
+<meta name="theme-color" content="#FF6B8B">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="MonBoard">
+<meta name="apple-mobile-web-app-title" content="SakuraBoard">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="description" content="Moodboard visuel personnel">
+<meta name="description" content="Moodboard visuel personnel - Thème Sakura">
 
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;700;800&family=DM+Mono:ital@0;1&display=swap" rel="stylesheet">
 <style>
   :root {
-    --lime: #C8FF00;
+    --sakura-neon: #FF6B8B;  /* Rose néon vif (Fleur de cerisier) */
+    --sakura-soft: #FFB7C5;  /* Rose pastel doux */
+    --sakura-dark: #120A0C;  /* Noir de jais avec une pointe de lie-de-vin (Fond principal) */
+    --sakura-card: #1C1215;  /* Noir légèrement plus clair pour les cartes */
+    --cream: #FFF5F6;        /* Blanc cassé rosé pour le texte */
     --coral: #FF4D2E;
-    --navy: #0A0A1A;
-    --cream: #F5F0E8;
-    --blue: #1A1AFF;
-    --pink: #FF2D78;
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body {
-    background: var(--navy);
+    background: var(--sakura-dark);
     color: var(--cream);
     font-family: 'Syne', sans-serif;
     overflow-x: hidden;
@@ -44,7 +45,7 @@
   #cursor {
     display: none;
     width: 16px; height: 16px;
-    background: var(--lime); border-radius: 50%;
+    background: var(--sakura-neon); border-radius: 50%;
     position: fixed; pointer-events: none; z-index: 9999;
     transform: translate(-50%, -50%);
     transition: transform 0.1s, background 0.2s;
@@ -53,7 +54,7 @@
   #cursor-ring {
     display: none;
     width: 44px; height: 44px;
-    border: 1.5px solid var(--lime); border-radius: 50%;
+    border: 1.5px solid var(--sakura-neon); border-radius: 50%;
     position: fixed; pointer-events: none; z-index: 9998;
     transform: translate(-50%, -50%);
     transition: all 0.18s ease;
@@ -64,24 +65,33 @@
     position: fixed; top: var(--safe-top); left: 0; right: 0; z-index: 200;
     display: flex; align-items: center; justify-content: space-between;
     padding: 1rem 1.5rem;
-    background: rgba(10,10,26,0.92);
+    background: rgba(18, 10, 12, 0.92);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid rgba(200,255,0,0.08);
+    border-bottom: 1px solid rgba(255, 107, 139, 0.15);
   }
   .logo {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.5rem; letter-spacing: 0.08em;
+    font-size: 1.7rem; letter-spacing: 0.05em;
     color: var(--cream); text-decoration: none;
+    display: flex; align-items: center; gap: 0.5rem;
   }
-  .logo span { color: var(--lime); }
+  .logo span { color: var(--sakura-neon); }
+  .logo .kanji {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem; font-weight: 400;
+    background: rgba(255, 107, 139, 0.15);
+    color: var(--sakura-soft);
+    padding: 0.1rem 0.4rem;
+    letter-spacing: 0;
+  }
   .nav-right { display: flex; align-items: center; gap: 1rem; }
   .nav-count {
     font-family: 'DM Mono', monospace;
     font-size: 0.7rem; letter-spacing: 0.12em;
-    color: var(--lime);
-    background: rgba(200,255,0,0.1);
-    border: 1px solid rgba(200,255,0,0.2);
+    color: var(--sakura-neon);
+    background: rgba(255, 107, 139, 0.1);
+    border: 1px solid rgba(255, 107, 139, 0.2);
     padding: 0.28rem 0.75rem;
   }
   #install-btn {
@@ -90,22 +100,22 @@
     font-size: 0.72rem; font-weight: 800;
     letter-spacing: 0.08em; text-transform: uppercase;
     padding: 0.3rem 0.9rem;
-    background: var(--lime); color: var(--navy);
+    background: var(--sakura-neon); color: var(--sakura-dark);
     border: none; cursor: pointer;
     clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
     transition: background 0.2s;
   }
-  #install-btn:hover { background: #d4ff1a; }
+  #install-btn:hover { background: var(--sakura-soft); }
   #install-btn.visible { display: block; }
 
   #toolbar {
-    position: fixed; top: 64px; left: 0; right: 0; z-index: 180;
+    position: fixed; top: 68px; left: 0; right: 0; z-index: 180;
     display: flex; align-items: center; gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    background: rgba(10,10,26,0.8);
+    background: rgba(18, 10, 12, 0.8);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border-bottom: 1px solid rgba(245,240,232,0.05);
+    border-bottom: 1px solid rgba(255, 245, 246, 0.05);
     overflow-x: auto; -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
@@ -113,7 +123,7 @@
   .toolbar-label {
     font-family: 'DM Mono', monospace;
     font-size: 0.65rem; letter-spacing: 0.18em;
-    text-transform: uppercase; color: rgba(245,240,232,0.28);
+    text-transform: uppercase; color: rgba(255, 245, 246, 0.3);
     white-space: nowrap; flex-shrink: 0;
   }
   .tag-btn {
@@ -121,69 +131,71 @@
     font-size: 0.7rem; font-weight: 800;
     letter-spacing: 0.07em; text-transform: uppercase;
     padding: 0.35rem 0.85rem; white-space: nowrap; flex-shrink: 0;
-    border: 1px solid rgba(245,240,232,0.12);
-    background: transparent; color: rgba(245,240,232,0.4);
+    border: 1px solid rgba(255, 245, 246, 0.12);
+    background: transparent; color: rgba(255, 245, 246, 0.4);
     cursor: pointer; transition: all 0.2s;
     -webkit-tap-highlight-color: transparent;
   }
-  .tag-btn:hover, .tag-btn:active { border-color: rgba(245,240,232,0.4); color: var(--cream); }
-  .tag-btn.active { background: var(--lime); border-color: var(--lime); color: var(--navy); }
-  .toolbar-sep { width: 1px; height: 16px; background: rgba(245,240,232,0.1); flex-shrink: 0; }
+  .tag-btn:hover, .tag-btn:active { border-color: rgba(255, 245, 246, 0.4); color: var(--cream); }
+  .tag-btn.active { background: var(--sakura-neon); border-color: var(--sakura-neon); color: var(--sakura-dark); }
+  .toolbar-sep { width: 1px; height: 16px; background: rgba(255, 245, 246, 0.1); flex-shrink: 0; }
   .view-btn {
-    background: transparent; border: 1px solid rgba(245,240,232,0.12);
-    color: rgba(245,240,232,0.32); cursor: pointer; flex-shrink: 0;
+    background: transparent; border: 1px solid rgba(255, 245, 246, 0.12);
+    color: rgba(255, 245, 246, 0.32); cursor: pointer; flex-shrink: 0;
     padding: 0.35rem 0.55rem; font-size: 0.82rem;
     transition: all 0.2s; display: flex; align-items: center;
     -webkit-tap-highlight-color: transparent;
   }
-  .view-btn.active, .view-btn:hover { border-color: var(--lime); color: var(--lime); }
+  .view-btn.active, .view-btn:hover { border-color: var(--sakura-neon); color: var(--sakura-neon); }
   #search-input {
     margin-left: auto; flex-shrink: 0;
-    background: rgba(245,240,232,0.05);
-    border: 1px solid rgba(245,240,232,0.1);
+    background: rgba(255, 245, 246, 0.05);
+    border: 1px solid rgba(255, 245, 246, 0.1);
     color: var(--cream); font-family: 'DM Mono', monospace;
     font-size: 0.73rem; letter-spacing: 0.07em;
     padding: 0.35rem 0.9rem; outline: none;
     width: 140px; transition: border-color 0.2s, width 0.3s;
   }
-  #search-input::placeholder { color: rgba(245,240,232,0.2); }
-  #search-input:focus { border-color: var(--lime); width: 200px; }
+  #search-input::placeholder { color: rgba(255, 245, 246, 0.2); }
+  #search-input:focus { border-color: var(--sakura-neon); width: 200px; }
 
-  main { padding-top: 120px; padding-bottom: 5rem; min-height: 100vh; }
+  main { padding-top: 130px; padding-bottom: 5rem; min-height: 100vh; }
 
   #drop-zone {
     margin: 1.5rem;
-    border: 2px dashed rgba(200,255,0,0.2);
-    padding: 2rem 1.5rem;
+    border: 1.5px solid rgba(255, 107, 139, 0.3);
+    padding: 2.5rem 1.5rem;
     text-align: center; cursor: pointer;
+    background: rgba(28, 18, 21, 0.4);
+    clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px));
     transition: border-color 0.3s, background 0.3s;
     -webkit-tap-highlight-color: transparent;
   }
-  #drop-zone.dragover { border-color: var(--lime); background: rgba(200,255,0,0.04); }
-  .drop-icon { font-size: 2rem; margin-bottom: 0.6rem; opacity: 0.3; }
+  #drop-zone.dragover { border-color: var(--sakura-neon); background: rgba(255, 107, 139, 0.06); }
+  .drop-icon { font-size: 2.2rem; margin-bottom: 0.6rem; filter: drop-shadow(0 0 8px var(--sakura-neon)); }
   .drop-title {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.7rem; letter-spacing: 0.06em;
+    font-size: 1.9rem; letter-spacing: 0.06em;
     color: var(--cream); margin-bottom: 0.3rem;
   }
   .drop-sub {
     font-family: 'DM Mono', monospace;
     font-size: 0.68rem; letter-spacing: 0.12em;
-    text-transform: uppercase; color: rgba(245,240,232,0.28);
-    margin-bottom: 1.2rem;
+    text-transform: uppercase; color: rgba(255, 245, 246, 0.3);
+    margin-bottom: 1.4rem;
   }
   .drop-hint {
     font-family: 'DM Mono', monospace;
     font-size: 0.62rem; letter-spacing: 0.1em;
-    text-transform: uppercase; color: rgba(200,255,0,0.3);
+    text-transform: uppercase; color: rgba(255, 107, 139, 0.5);
     margin-top: 0.8rem;
   }
   @media (pointer: coarse) { .drop-hint { display: none; } }
   #file-input { display: none; }
   .upload-btn {
     display: inline-block;
-    background: var(--lime); color: var(--navy);
-    padding: 0.7rem 1.8rem;
+    background: var(--sakura-neon); color: var(--sakura-dark);
+    padding: 0.75rem 2rem;
     font-family: 'Syne', sans-serif;
     font-size: 0.78rem; font-weight: 800;
     letter-spacing: 0.1em; text-transform: uppercase;
@@ -192,12 +204,13 @@
     transition: background 0.2s, transform 0.2s;
     -webkit-tap-highlight-color: transparent;
   }
+  .upload-btn:hover { background: var(--sakura-soft); }
   .upload-btn:active { transform: scale(0.97); }
 
   #empty-state {
     display: none;
     text-align: center; padding: 3.5rem 2rem;
-    color: rgba(245,240,232,0.16);
+    color: rgba(255, 245, 246, 0.16);
   }
   #empty-state.visible { display: block; }
   .empty-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem; margin-bottom: 0.4rem; }
@@ -206,7 +219,7 @@
   #gallery {
     padding: 0 1.5rem;
     column-count: 2;
-    column-gap: 8px;
+    column-gap: 10px;
   }
   @media (min-width: 600px) { #gallery { column-count: 3; } }
   @media (min-width: 900px) { #gallery { column-count: 4; } }
@@ -218,11 +231,12 @@
 
   .photo-card {
     break-inside: avoid;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     position: relative; overflow: hidden;
     cursor: pointer;
     animation: cardIn 0.4s ease both;
-    background: rgba(245,240,232,0.04);
+    background: var(--sakura-card);
+    border: 1px solid rgba(255, 107, 139, 0.05);
     -webkit-tap-highlight-color: transparent;
   }
   @keyframes cardIn {
@@ -230,13 +244,13 @@
     to { opacity: 1; transform: none; }
   }
   .photo-card img { width: 100%; display: block; transition: transform 0.5s ease; }
-  .photo-card:hover img { transform: scale(1.05); }
+  .photo-card:hover img { transform: scale(1.04); }
 
   .photo-overlay {
     position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(10,10,26,0.9) 0%, transparent 55%);
+    background: linear-gradient(to top, rgba(18, 10, 12, 0.95) 0%, transparent 60%);
     display: flex; flex-direction: column;
-    justify-content: flex-end; padding: 0.75rem;
+    justify-content: flex-end; padding: 0.85rem;
     opacity: 0; transition: opacity 0.3s;
   }
   .photo-card:hover .photo-overlay { opacity: 1; }
@@ -244,33 +258,33 @@
 
   .photo-name {
     font-family: 'DM Mono', monospace;
-    font-size: 0.62rem; letter-spacing: 0.09em;
-    color: rgba(245,240,232,0.6);
-    margin-bottom: 0.35rem; word-break: break-all;
+    font-size: 0.65rem; letter-spacing: 0.08em;
+    color: rgba(255, 245, 246, 0.8);
+    margin-bottom: 0.4rem; word-break: break-all;
   }
-  .photo-tags { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 0.4rem; }
+  .photo-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 0.5rem; }
   .photo-tag {
     font-size: 0.55rem; font-weight: 800;
     letter-spacing: 0.09em; text-transform: uppercase;
-    padding: 1px 6px;
+    padding: 2px 7px;
   }
-  .photo-actions { display: flex; gap: 4px; }
+  .photo-actions { display: flex; gap: 6px; }
   .action-btn {
-    background: rgba(10,10,26,0.8);
-    border: 1px solid rgba(245,240,232,0.12);
+    background: rgba(18, 10, 12, 0.8);
+    border: 1px solid rgba(255, 245, 246, 0.15);
     color: var(--cream); font-size: 0.62rem;
-    padding: 0.25rem 0.55rem; cursor: pointer;
+    padding: 0.28rem 0.6rem; cursor: pointer;
     font-family: 'Syne', sans-serif; font-weight: 800;
     letter-spacing: 0.05em; text-transform: uppercase;
     transition: all 0.2s;
     -webkit-tap-highlight-color: transparent;
   }
-  .action-btn.tag-action:active, .action-btn.tag-action:hover { background: var(--lime); border-color: var(--lime); color: var(--navy); }
-  .action-btn.del-action:active, .action-btn.del-action:hover { background: var(--coral); border-color: var(--coral); }
+  .action-btn.tag-action:active, .action-btn.tag-action:hover { background: var(--sakura-neon); border-color: var(--sakura-neon); color: var(--sakura-dark); }
+  .action-btn.del-action:active, .action-btn.del-action:hover { background: var(--coral); border-color: var(--coral); color: white; }
 
   #lightbox {
     position: fixed; inset: 0; z-index: 500;
-    background: rgba(10,10,26,0.97);
+    background: rgba(18, 10, 12, 0.97);
     display: flex; align-items: center; justify-content: center;
     opacity: 0; pointer-events: none;
     transition: opacity 0.3s;
@@ -281,7 +295,7 @@
   #lb-img {
     max-width: 90vw; max-height: 84vh;
     object-fit: contain;
-    border: 1px solid rgba(200,255,0,0.1);
+    border: 1px solid rgba(255, 107, 139, 0.15);
     animation: lbIn 0.3s ease both;
   }
   @keyframes lbIn { from { transform: scale(0.92); opacity: 0; } to { transform: none; opacity: 1; } }
@@ -289,7 +303,7 @@
     position: fixed; top: max(1.5rem, env(safe-area-inset-top, 1.5rem)); right: 1.5rem;
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1.5rem; letter-spacing: 0.1em;
-    color: var(--lime); cursor: pointer;
+    color: var(--sakura-neon); cursor: pointer;
     background: none; border: none; transition: opacity 0.2s;
     -webkit-tap-highlight-color: transparent;
   }
@@ -298,7 +312,7 @@
     transform: translateX(-50%);
     font-family: 'DM Mono', monospace;
     font-size: 0.68rem; letter-spacing: 0.1em;
-    color: rgba(245,240,232,0.32); text-transform: uppercase;
+    color: rgba(255, 245, 246, 0.35); text-transform: uppercase;
     white-space: nowrap; text-align: center;
   }
   #lb-nav {
@@ -308,20 +322,20 @@
   }
   .lb-arrow {
     pointer-events: all;
-    background: rgba(10,10,26,0.65);
-    border: 1px solid rgba(200,255,0,0.15);
-    color: var(--lime);
+    background: rgba(18, 10, 12, 0.65);
+    border: 1px solid rgba(255, 107, 139, 0.15);
+    color: var(--sakura-neon);
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1.2rem; padding: 0.5rem 1rem;
     cursor: pointer; transition: background 0.2s;
     transform: translateY(-50%);
     -webkit-tap-highlight-color: transparent;
   }
-  .lb-arrow:active { background: rgba(200,255,0,0.12); }
+  .lb-arrow:active { background: rgba(255, 107, 139, 0.12); }
 
   #tag-modal {
     position: fixed; inset: 0; z-index: 600;
-    background: rgba(10,10,26,0.93);
+    background: rgba(18, 10, 12, 0.93);
     display: flex; align-items: flex-end; justify-content: center;
     opacity: 0; pointer-events: none;
     transition: opacity 0.25s;
@@ -331,8 +345,8 @@
   @media (min-width: 600px) { #tag-modal { align-items: center; } }
   #tag-modal.open { opacity: 1; pointer-events: all; }
   .modal-box {
-    background: #0f0f22;
-    border: 1px solid rgba(200,255,0,0.18);
+    background: #180F11;
+    border: 1px solid rgba(255, 107, 139, 0.18);
     border-bottom: none;
     padding: 1.75rem 1.5rem calc(1.75rem + env(safe-area-inset-bottom, 0px));
     width: 100%; max-width: 400px;
@@ -340,21 +354,21 @@
     animation: slideUp 0.3s ease both;
   }
   @media (min-width: 600px) {
-    .modal-box { border-bottom: 1px solid rgba(200,255,0,0.18); padding-bottom: 1.75rem; }
+    .modal-box { border-bottom: 1px solid rgba(255, 107, 139, 0.18); padding-bottom: 1.75rem; }
   }
   @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
-  .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.06em; margin-bottom: 0.4rem; color: var(--lime); }
-  .modal-sub { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(245,240,232,0.32); margin-bottom: 1.1rem; }
+  .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.06em; margin-bottom: 0.4rem; color: var(--sakura-neon); }
+  .modal-sub { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 245, 246, 0.32); margin-bottom: 1.1rem; }
   .tag-options { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.4rem; }
   .tag-opt {
     font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
     padding: 0.4rem 0.9rem;
-    border: 1px solid rgba(245,240,232,0.12);
-    background: transparent; color: rgba(245,240,232,0.42);
+    border: 1px solid rgba(255, 245, 246, 0.12);
+    background: transparent; color: rgba(255, 245, 246, 0.42);
     cursor: pointer; transition: all 0.2s;
     -webkit-tap-highlight-color: transparent;
   }
-  .tag-opt.selected { background: var(--lime); border-color: var(--lime); color: var(--navy); }
+  .tag-opt.selected { background: var(--sakura-neon); border-color: var(--sakura-neon); color: var(--sakura-dark); }
   .modal-actions { display: flex; gap: 0.6rem; justify-content: flex-end; }
   .modal-btn {
     font-family: 'Syne', sans-serif; font-size: 0.75rem; font-weight: 800;
@@ -362,14 +376,14 @@
     padding: 0.55rem 1.3rem; border: 1px solid; cursor: pointer; transition: all 0.2s;
     -webkit-tap-highlight-color: transparent;
   }
-  .modal-btn.cancel { border-color: rgba(245,240,232,0.15); color: rgba(245,240,232,0.4); background: transparent; }
-  .modal-btn.confirm { border-color: var(--lime); color: var(--navy); background: var(--lime); }
-  .modal-btn.confirm:active { background: #d4ff1a; }
+  .modal-btn.cancel { border-color: rgba(255, 245, 246, 0.15); color: rgba(255, 245, 246, 0.4); background: transparent; }
+  .modal-btn.confirm { border-color: var(--sakura-neon); color: var(--sakura-dark); background: var(--sakura-neon); }
+  .modal-btn.confirm:active { background: var(--sakura-soft); }
 
   #toast {
     position: fixed; bottom: calc(2rem + env(safe-area-inset-bottom, 0px)); left: 50%;
     transform: translateX(-50%) translateY(80px);
-    background: var(--lime); color: var(--navy);
+    background: var(--sakura-neon); color: var(--sakura-dark);
     font-family: 'DM Mono', monospace;
     font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
     padding: 0.65rem 1.4rem; z-index: 700;
@@ -379,19 +393,19 @@
   #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
   .marquee-wrap {
-    background: var(--lime); padding: 0.6rem 0;
+    background: var(--sakura-neon); padding: 0.6rem 0;
     overflow: hidden; white-space: nowrap;
     position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
     padding-bottom: calc(0.6rem + env(safe-area-inset-bottom, 0px));
   }
   .marquee-track { display: inline-flex; animation: marquee 28s linear infinite; }
-  .marquee-track span { font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem; letter-spacing: 0.06em; color: var(--navy); padding: 0 1.2rem; }
-  .marquee-sep { color: var(--coral) !important; }
+  .marquee-track span { font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem; letter-spacing: 0.06em; color: var(--sakura-dark); padding: 0 1.2rem; }
+  .marquee-sep { color: var(--cream) !important; }
   @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
   #offline-banner {
     display: none;
-    position: fixed; top: 64px; left: 0; right: 0; z-index: 150;
+    position: fixed; top: 68px; left: 0; right: 0; z-index: 150;
     background: var(--coral); color: white;
     font-family: 'DM Mono', monospace;
     font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
@@ -399,11 +413,12 @@
   }
   #offline-banner.visible { display: block; }
 
-  .tag-branding { background: rgba(255,77,46,0.2); color: var(--coral); }
-  .tag-photo { background: rgba(200,255,0,0.12); color: var(--lime); }
-  .tag-ui { background: rgba(26,26,255,0.25); color: #8888ff; }
-  .tag-motion { background: rgba(255,45,120,0.2); color: var(--pink); }
-  .tag-inspo { background: rgba(245,240,232,0.08); color: rgba(245,240,232,0.52); }
+  /* Ajustement des couleurs des tags */
+  .tag-branding { background: rgba(255, 107, 139, 0.2); color: var(--sakura-soft); }
+  .tag-photo { background: rgba(255, 183, 197, 0.15); color: #FFA3B1; }
+  .tag-ui { background: rgba(255, 245, 246, 0.1); color: var(--cream); }
+  .tag-motion { background: rgba(255, 77, 46, 0.2); color: var(--coral); }
+  .tag-inspo { background: rgba(255, 107, 139, 0.3); color: var(--sakura-neon); }
 </style>
 </head>
 <body>
@@ -414,7 +429,8 @@
 <div id="offline-banner">✕ Mode hors-ligne — tes images restent disponibles</div>
 
 <nav>
-  <a href="#" class="logo">Mon<span>Board</span></a>
+  <!-- Le logo stylisé Streetwear/Animé avec le kanji Sakura -->
+  <a href="#" class="logo">SAKURA<span>BOARD</span><div class="kanji">桜</div></a>
   <div class="nav-right">
     <button id="install-btn">+ Installer</button>
     <span class="nav-count" id="count-badge">0 images</span>
@@ -439,8 +455,8 @@
 
 <main>
   <div id="drop-zone" role="button" tabindex="0" aria-label="Zone d'upload d'images">
-    <div class="drop-icon">✦</div>
-    <h2 class="drop-title">Glisse tes images ici</h2>
+    <div class="drop-icon">🌸</div>
+    <h2 class="drop-title">Glisse tes inspirations ici</h2>
     <p class="drop-sub">jpeg · png · gif · webp</p>
     <label for="file-input" class="upload-btn">Choisir des fichiers</label>
     <input type="file" id="file-input" multiple accept="image/*">
@@ -485,18 +501,16 @@
 
 <div class="marquee-wrap" aria-hidden="true">
   <div class="marquee-track">
-    <span>MonBoard</span><span class="marquee-sep">✦</span>
-    <span>Créatif</span><span class="marquee-sep">✦</span>
-    <span>Inspiration</span><span class="marquee-sep">✦</span>
-    <span>Portfolio</span><span class="marquee-sep">✦</span>
-    <span>Visuel</span><span class="marquee-sep">✦</span>
-    <span>Design</span><span class="marquee-sep">✦</span>
-    <span>MonBoard</span><span class="marquee-sep">✦</span>
-    <span>Créatif</span><span class="marquee-sep">✦</span>
-    <span>Inspiration</span><span class="marquee-sep">✦</span>
-    <span>Portfolio</span><span class="marquee-sep">✦</span>
-    <span>Visuel</span><span class="marquee-sep">✦</span>
-    <span>Design</span><span class="marquee-sep">✦</span>
+    <span>SakuraBoard</span><span class="marquee-sep">🌸</span>
+    <span>Inspiration</span><span class="marquee-sep">🌸</span>
+    <span>Créatif</span><span class="marquee-sep">🌸</span>
+    <span>Moodboard</span><span class="marquee-sep">🌸</span>
+    <span>Visuel</span><span class="marquee-sep">🌸</span>
+    <span>SakuraBoard</span><span class="marquee-sep">🌸</span>
+    <span>Inspiration</span><span class="marquee-sep">🌸</span>
+    <span>Créatif</span><span class="marquee-sep">🌸</span>
+    <span>Moodboard</span><span class="marquee-sep">🌸</span>
+    <span>Visuel</span><span class="marquee-sep">🌸</span>
   </div>
 </div>
 
@@ -534,7 +548,7 @@ document.getElementById('install-btn').addEventListener('click', () => {
 });
 window.addEventListener('appinstalled', () => {
   document.getElementById('install-btn').classList.remove('visible');
-  toast('App installée ✦');
+  toast('App installée 🌸');
 });
 
 // ── OFFLINE ────────────────────────────────────
@@ -602,7 +616,7 @@ function render() {
   empty.classList.remove('visible');
 
   if (list.length === 0) {
-    gallery.innerHTML = '<div style="text-align:center;padding:3.5rem;color:rgba(245,240,232,0.15);font-family:\'DM Mono\',monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;">Aucun résultat</div>';
+    gallery.innerHTML = '<div style="text-align:center;padding:3.5rem;color:rgba(255,245,246,0.15);font-family:\'DM Mono\',monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;">Aucun résultat</div>';
     return;
   }
 
@@ -690,7 +704,7 @@ document.addEventListener('paste', e => {
         });
         save();
         render();
-        toast('Image collée ! ✦');
+        toast('Image collée ! 🌸');
       };
       reader.readAsDataURL(blob);
     }
@@ -729,7 +743,7 @@ document.getElementById('tag-confirm').addEventListener('click', () => {
     save();
     render();
     modal.classList.remove('open');
-    toast('Tags mis à jour ✦');
+    toast('Tags mis à jour 🌸');
   }
 });
 
